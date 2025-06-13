@@ -1,0 +1,109 @@
+{% extends "bootstrap/base.html" %}
+
+{% block head %}
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>flaskdb | Add Item</title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/static/css/flaskdb.css" rel="stylesheet">
+  <!-- A Sample Web-DB Application for DB-DESIGN lecture -->
+  <!-- Copyright (C) 2022 Yasuhiro Hayashi -->
+{% endblock %}
+
+{% block navbar %}
+<div class="navbar navbar-inverse" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="{{ url_for('app.index') }}">flaskdb</a>
+    </div>
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        {% if not "username" in session %}
+        <li><a href="{{ url_for('app.login') }}">Login</a></li>
+        {% else %}
+        <li><a href="{{ url_for('app.additem') }}">Add Item</a></li>
+        <li><a href="{{ url_for('app.searchitem') }}">Search Item</a></li>
+        <li><a href="{{ url_for('app.addtocart') }}">Cart</a></li>
+        <li><a href="{{ url_for('app.logout') }}">Logout</a></li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="page-header"><h1>Add Item</h1></div>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}"> {{ message|capitalize }} </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  {% if form %}
+    {% for field in form.errors %}
+      {% for error in form.errors[field] %}
+        <div class="alert alert-danger">{{ error }}</div>
+      {% endfor %}
+    {% endfor %}
+  {% endif %}
+
+  {% if form %}
+  <form action="{{ url_for('app.additem') }}" method="POST" novalidate class="mb-10">
+    <div class="form-group">
+      <label for="itemname">{{ form.itemname.label }}</label>
+      {{ form.itemname(type="text", id="itemname", class="form-control", placeholder="Enter item name") }}
+    </div>
+    <div class="form-group">
+      <label for="price">{{ form.price.label }}</label>
+      {{ form.price(type="text", id="price", class="form-control", placeholder="Enter price") }}
+    </div>
+    {{ form.csrf_token }}
+    {{ form.cancel(class="btn") }}
+    {{ form.submit(class="btn btn-primary") }}
+  </form>
+  {% endif %}
+
+  {% if itemlist %}
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Owner ID</th>
+        <th scope="col">Owner Name</th>
+        <th scope="col">Item Name</th>
+        <th scope="col">Price</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for item in itemlist %}
+        <tr>
+          <th scope="row">{{ item.id }}</th>
+          <td>{{ item.owner_id }}</td>
+          <td>{{ item.username }}</td>
+          <td>{{ item.itemname }}</td>
+          <td>{{ item.price }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ bootstrap_find_resource('jquery.js', cdn='jquery') }}"></script>
+<script src="{{ bootstrap_find_resource('js/bootstrap.js', cdn='bootstrap') }}"></script>
+<script src="/static/js/flaskdb.js"></script>
+{% endblock %}

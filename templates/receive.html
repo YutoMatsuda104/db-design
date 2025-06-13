@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+/html>
+<head>
+<title>flaskdb | receive</title>
+<!-- A Sample Web-DB Application for DB-DESIGN lecture -->
+<!-- Copyright (C) 2022 Yasuhiro Hayashi -->
+</head>
+<body>
+
+<h2>GET:</h2>
+<div><a href="{{ url_for('app.receive') }}">{{ url_for('app.receive') }}</a></div>
+<div><a href="{{ url_for('app.receive') }}?username=taro&password=password">{{ url_for('app.receive') }}?username=taro&password=password</a></div>
+<br>
+<br>
+<br>
+
+<h2>POST:</h2>
+<form action="{{ url_for('app.receive') }}" method="POST">
+<input type="text" name="username" placeholder="Input your name">
+<input type="password" name="password" placeholder="Input your password">
+<button type="button">Cancel</button>
+<input type="submit" value="Login">
+</form>
+<br>
+<br>
+<br>
+
+<h2>Received Data:</h2>
+<div>username: {{ username }}</div>
+<div>password: {{ password }}</div>
+
+</body>
+</html>
